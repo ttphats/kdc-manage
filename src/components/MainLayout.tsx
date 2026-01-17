@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useEffect } from 'react';
-import { Layout, Menu, Avatar, Dropdown, Typography, Space, Tag } from 'antd';
+import React, { useEffect } from "react";
+import { Layout, Menu, Avatar, Dropdown, Typography, Space, Tag } from "antd";
 import {
   UserOutlined,
   HomeOutlined,
@@ -11,9 +11,9 @@ import {
   SettingOutlined,
   FileTextOutlined,
   SwapOutlined,
-} from '@ant-design/icons';
-import { useRouter, usePathname } from 'next/navigation';
-import { useAuth } from '../contexts/AuthContext';
+} from "@ant-design/icons";
+import { useRouter, usePathname } from "next/navigation";
+import { useAuth } from "../contexts/AuthContext";
 
 const { Header, Content, Sider } = Layout;
 const { Text } = Typography;
@@ -30,7 +30,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [isAuthenticated, router]);
 
@@ -40,43 +40,43 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   const menuItems = [
     {
-      key: '/',
+      key: "/",
       icon: <HomeOutlined />,
-      label: 'Trang chủ',
+      label: "Trang chủ",
     },
     {
-      key: '/residents',
+      key: "/residents",
       icon: <UserOutlined />,
-      label: 'Quản lý nhân khẩu',
+      label: "Quản lý nhân khẩu",
     },
     {
-      key: '/households',
+      key: "/households",
       icon: <TeamOutlined />,
-      label: 'Quản lý hộ khẩu',
+      label: "Quản lý hộ khẩu",
     },
     {
-      key: '/tam-tru-vang',
+      key: "/tam-tru-vang",
       icon: <SwapOutlined />,
-      label: 'Tạm trú / Tạm vắng',
+      label: "Tạm trú / Tạm vắng",
     },
     {
-      key: '/statistics',
+      key: "/statistics",
       icon: <BarChartOutlined />,
-      label: 'Thống kê',
+      label: "Thống kê",
     },
     {
-      key: '/reports',
+      key: "/reports",
       icon: <FileTextOutlined />,
-      label: 'Báo cáo',
+      label: "Báo cáo",
     },
   ];
 
   // Thêm menu quản lý người dùng cho admin
-  if (user?.role === 'admin') {
+  if (user?.role === "admin") {
     menuItems.push({
-      key: '/users',
+      key: "/users",
       icon: <SettingOutlined />,
-      label: 'Quản lý người dùng',
+      label: "Quản lý người dùng",
     });
   }
 
@@ -86,83 +86,99 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   const userMenuItems = [
     {
-      key: 'profile',
+      key: "profile",
       icon: <UserOutlined />,
-      label: 'Thông tin cá nhân',
+      label: "Thông tin cá nhân",
     },
     {
-      key: 'logout',
+      key: "logout",
       icon: <LogoutOutlined />,
-      label: 'Đăng xuất',
+      label: "Đăng xuất",
       danger: true,
     },
   ];
 
   const handleUserMenuClick = (e: { key: string }) => {
-    if (e.key === 'logout') {
+    if (e.key === "logout") {
       logout();
-      router.push('/login');
+      router.push("/login");
     }
   };
 
   const getRoleTag = (role: string) => {
     const roleMap = {
-      admin: { color: 'red', text: 'Quản trị viên' },
-      canbo: { color: 'blue', text: 'Cán bộ' },
-      viewer: { color: 'green', text: 'Chỉ xem' },
+      admin: { color: "red", text: "Quản trị viên" },
+      canbo: { color: "blue", text: "Cán bộ" },
+      viewer: { color: "green", text: "Chỉ xem" },
     };
-    const roleInfo = roleMap[role as keyof typeof roleMap] || { color: 'default', text: role };
+    const roleInfo = roleMap[role as keyof typeof roleMap] || {
+      color: "default",
+      text: role,
+    };
     return <Tag color={roleInfo.color}>{roleInfo.text}</Tag>;
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: "100vh" }}>
       <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
         <div
           style={{
             height: 32,
             margin: 16,
-            background: 'rgba(255, 255, 255, 0.2)',
-            borderRadius: '6px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontWeight: 'bold',
+            background: "rgba(255, 255, 255, 0.2)",
+            borderRadius: "6px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "white",
+            fontWeight: "bold",
           }}
         >
-          {!collapsed ? 'Quản lý dân cư' : 'QLDC'}
+          {!collapsed ? "Quản lý dân cư" : "QLDC"}
         </div>
         <Menu
           theme="dark"
-          selectedKeys={[pathname]}
+          selectedKeys={pathname ? [pathname] : []}
           mode="inline"
           items={menuItems}
           onClick={handleMenuClick}
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: '0 24px', background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text strong style={{ fontSize: '20px' }}>
+        <Header
+          style={{
+            padding: "0 24px",
+            background: "#fff",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text strong style={{ fontSize: "20px" }}>
             Hệ thống quản lý hộ dân cư - Phường/Xã
           </Text>
-          <Dropdown menu={{ items: userMenuItems, onClick: handleUserMenuClick }} placement="bottomRight">
-            <Space style={{ cursor: 'pointer' }}>
+          <Dropdown
+            menu={{ items: userMenuItems, onClick: handleUserMenuClick }}
+            placement="bottomRight"
+          >
+            <Space style={{ cursor: "pointer" }}>
               <Avatar icon={<UserOutlined />} />
               <div>
-                <div><Text strong>{user?.hoTen}</Text></div>
-                <div>{getRoleTag(user?.role || '')}</div>
+                <div>
+                  <Text strong>{user?.hoTen}</Text>
+                </div>
+                <div>{getRoleTag(user?.role || "")}</div>
               </div>
             </Space>
           </Dropdown>
         </Header>
-        <Content style={{ margin: '16px' }}>
+        <Content style={{ margin: "16px" }}>
           <div
             style={{
               padding: 24,
               minHeight: 360,
-              background: '#fff',
-              borderRadius: '8px',
+              background: "#fff",
+              borderRadius: "8px",
             }}
           >
             {children}
@@ -172,4 +188,3 @@ export default function MainLayout({ children }: MainLayoutProps) {
     </Layout>
   );
 }
-

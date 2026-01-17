@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, Permission, ROLE_PERMISSIONS } from '../types';
-import { authenticateUser } from '../data/mockUsers';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { User, Permission, ROLE_PERMISSIONS } from "../types";
+import { authenticateUser } from "../data/mockUsers";
 
 interface AuthContextType {
   user: User | null;
@@ -14,26 +14,33 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
-  const [permissions, setPermissions] = useState<Permission>(ROLE_PERMISSIONS.viewer);
+  const [permissions, setPermissions] = useState<Permission>(
+    ROLE_PERMISSIONS.viewer
+  );
 
   // Load user from localStorage on mount
   useEffect(() => {
-    const savedUser = localStorage.getItem('currentUser');
+    const savedUser = localStorage.getItem("currentUser");
     if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
+      const parsedUser = JSON.parse(savedUser) as User;
       setUser(parsedUser);
       setPermissions(ROLE_PERMISSIONS[parsedUser.role]);
     }
   }, []);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (
+    username: string,
+    password: string
+  ): Promise<boolean> => {
     const authenticatedUser = authenticateUser(username, password);
     if (authenticatedUser) {
       setUser(authenticatedUser);
       setPermissions(ROLE_PERMISSIONS[authenticatedUser.role]);
-      localStorage.setItem('currentUser', JSON.stringify(authenticatedUser));
+      localStorage.setItem("currentUser", JSON.stringify(authenticatedUser));
       return true;
     }
     return false;
@@ -42,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setUser(null);
     setPermissions(ROLE_PERMISSIONS.viewer);
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem("currentUser");
   };
 
   return (
@@ -63,8 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
-
