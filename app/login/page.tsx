@@ -8,6 +8,8 @@ import { useAuth } from "../../src/contexts/AuthContext";
 
 const { Title, Text } = Typography;
 
+export const dynamic = "force-dynamic";
+
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
